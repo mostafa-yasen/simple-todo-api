@@ -19,6 +19,11 @@ db.once('open', () => {
 const app = express()
 
 app.use(express.json())
+
+const todoRouter = require('./routes/todo')
+
+app.use('/api/v1/todos', todoRouter)
+
 app.listen(PORT, () => {
     console.log(`Server is listening on http://localhost:${PORT}`)
 })
