@@ -1,0 +1,22 @@
+{
+  "name": "simple-todo-api",
+  "version": "0.0.1",
+  "description": "A simple TODO App API using express.JS and MongoDB",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "todo",
+    "api",
+    "simple",
+    "productivity",
+    "productive",
+    "work",
+    "helping",
+    "help",
+    "done"
+  ],
+  "author": "@mostafa-yasen",
+  "license": "MIT"
+}
