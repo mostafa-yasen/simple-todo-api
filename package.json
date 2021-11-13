@@ -4,7 +4,7 @@
   "description": "A simple TODO App API using express.JS and MongoDB",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "startDev": "nodemon server.js"
   },
   "keywords": [
     "todo",
@@ -18,5 +18,9 @@
     "done"
   ],
   "author": "@mostafa-yasen",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^6.0.12"
+  }
 }
