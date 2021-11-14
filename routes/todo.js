@@ -43,8 +43,19 @@ router.post('/', async (req, res) => {
 })
 
 // Update One
-router.patch('/:id', getTodoItem, (req, res) => {
-    res.send('Update One ' + req.params.id)
+router.patch('/:id', getTodoItem, async (req, res) => {
+    let body = req.body
+    if (body.title === "") {
+        let msg = `Title field can not be empty`
+        res.status(400).json(new ApiResponse(400, 'BadRequest', null, msg, msg))
+    }
+
+    if (body.title.length) {
+        res.todoItem.title = body.title
+    }
+    res.todoItem.done = body.done || false
+    let updatedItem = await res.todoItem.save()
+    res.json(new ApiResponse(200, null, updatedItem))
 })
 
 // Delete One
