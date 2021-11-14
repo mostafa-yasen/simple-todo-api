@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
 
 // GET One
 router.get('/:id', getTodoItem, (req, res) => {
-    res.send('Get one ' + req.params.id)
+    return res.json(new ApiResponse(200, null, res.todoItem))
 })
 
 // Create One
@@ -54,12 +54,13 @@ router.delete('/:id', getTodoItem, (req, res) => {
 
 // Middleware
 async function getTodoItem(req, res, next) {
+    let todoItem
     try {
         if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
             let msg = `Can not find item ${req.params.id}`
             return res.status(404).json(new ApiResponse(404, 'NotFound', null, msg, msg))
         }
-        let todoItem = await Todo.findById(req.params.id)
+        todoItem = await Todo.findById(req.params.id)
         if (!todoItem) {
             let msg = `Can not find item ${req.params.id}`
             return res.status(404).json(new ApiResponse(404, 'NotFound', null, msg, msg))
