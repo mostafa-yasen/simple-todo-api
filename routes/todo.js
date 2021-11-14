@@ -59,8 +59,15 @@ router.patch('/:id', getTodoItem, async (req, res) => {
 })
 
 // Delete One
-router.delete('/:id', getTodoItem, (req, res) => {
-    res.send('Delete One ' + req.params.id)
+router.delete('/:id', getTodoItem, async (req, res) => {
+    try {
+        await res.todoItem.remove()
+        let msg = `Item removed successfully`
+        return res.json(new ApiResponse(200, null, null, msg, msg))
+    } catch(err) {
+        let msg = err.message
+        return res.status(500).json(new ApiResponse(500, 'ServerError', null, msg, msg))
+    }
 })
 
 // Middleware
