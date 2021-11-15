@@ -1,6 +1,8 @@
 const PORT = 9090
 require('dotenv').config()
 const express = require('express')
+var cors = require('cors')
+
 const mongoose = require('mongoose')
 
 
@@ -19,6 +21,7 @@ db.once('open', () => {
 const app = express()
 
 app.use(express.json())
+app.use(cors())
 
 const todoRouter = require('./routes/todo')
 

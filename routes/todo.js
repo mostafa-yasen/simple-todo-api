@@ -7,7 +7,7 @@ const ApiResponse = require('../models/response').ApiResponse
 router.get('/', async (req, res) => {
     try {
         const allItems = await Todo.find()
-        return res.json(new ApiResponse(data=allItems))
+        return res.json(new ApiResponse(200, null, allItems))
     } catch(err) {
         let msg = err.message
         return res.status(500).json(new ApiResponse(
