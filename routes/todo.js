@@ -3,10 +3,13 @@ const router = express.Router()
 const Todo = require('../models/todo')
 const ApiResponse = require('../models/response').ApiResponse
 
+
+const authenticate = require('./auth.middleware')
+
 // GET all
-router.get('/', async (req, res) => {
+router.get('/', authenticate, async (req, res) => {
     try {
-        const allItems = await Todo.find()
+        const allItems = await Todo.find({owner: req.user.email})
         return res.json(new ApiResponse(200, null, allItems))
     } catch(err) {
         let msg = err.message
@@ -17,19 +20,19 @@ router.get('/', async (req, res) => {
 })
 
 // GET One
-router.get('/:id', getTodoItem, (req, res) => {
+router.get('/:id', authenticate, getTodoItem, (req, res) => {
     return res.json(new ApiResponse(200, null, res.todoItem))
 })
 
 // Create One
-router.post('/', async (req, res) => {
+router.post('/', authenticate, async (req, res) => {
     const body = req.body
     if (!body.title) {
         let msg = `Title field can not be empty`
         return res.status(400).json(new ApiResponse(400, 'BadRequest', null, msg, msg))
     }
     try {
-        let newItem = new Todo({ title: body.title })
+        let newItem = new Todo({ title: body.title, owner: req.user.email })
         if (body.done) {
             newItem.done = body.done
         }
@@ -43,7 +46,7 @@ router.post('/', async (req, res) => {
 })
 
 // Update One
-router.patch('/:id', getTodoItem, async (req, res) => {
+router.patch('/:id', authenticate, getTodoItem, async (req, res) => {
     let body = req.body
     if (body.title === "") {
         let msg = `Title field can not be empty`
@@ -59,7 +62,7 @@ router.patch('/:id', getTodoItem, async (req, res) => {
 })
 
 // Delete One
-router.delete('/:id', getTodoItem, async (req, res) => {
+router.delete('/:id', authenticate, getTodoItem, async (req, res) => {
     try {
         await res.todoItem.remove()
         let msg = `Item removed successfully`
@@ -82,6 +85,10 @@ async function getTodoItem(req, res, next) {
         if (!todoItem) {
             let msg = `Can not find item ${req.params.id}`
             return res.status(404).json(new ApiResponse(404, 'NotFound', null, msg, msg))
+        }
+        if (todoItem.owner != req.user.email) {
+            let msg = `You are not authorized on this item`
+            return res.status(401).json(new ApiResponse(401, 'Unauthorized', null, msg, msg))
         }
     } catch (err) {
         let msg = err.message

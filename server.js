@@ -5,8 +5,6 @@ var cors = require('cors')
 
 const mongoose = require('mongoose')
 
-
-
 mongoose.connect(process.env.DATABASE_URL)
 const db = mongoose.connection
 
@@ -23,8 +21,10 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
+const authRouter = require('./routes/auth')
 const todoRouter = require('./routes/todo')
 
+app.use('/api/v1/users', authRouter)
 app.use('/api/v1/todos', todoRouter)
 
 app.listen(PORT, () => {
