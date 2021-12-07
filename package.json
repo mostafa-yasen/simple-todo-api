@@ -4,7 +4,7 @@
   "description": "A simple TODO App API using express.JS and MongoDB",
   "main": "server.js",
   "scripts": {
-    "startDev": "nodemon server.js"
+    "start": "nodemon server.js"
   },
   "keywords": [
     "todo",

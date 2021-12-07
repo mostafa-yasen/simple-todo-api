@@ -34,9 +34,9 @@ router.post('/login', validateLogin, async (req, res) => {
             return res.status(403).json(new ApiResponse(403, 'Forbidden', null, msg, msg))
         }
         const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET)
-        res.header('JWT-Token', token).json({
-            email: user.email
-        })
+
+        res.header('Access-Control-Expose-Headers', 'JWT-Token')
+        res.header('JWT-Token', token).json(new ApiResponse(200, '', {email: user.email}, 'Logged in successfully'))
 
     } catch(err) {
         let msg = err.message
@@ -57,7 +57,7 @@ async function validateLogin(req, res, next) {
     let usr = await User.findOne({email: req.body.email})
     if (!usr) {
         let msg = `Wrong email or password`
-        return res.status(403).json(new ApiResponse(400, 'Forbidden', msg))
+        return res.status(403).json(new ApiResponse(400, 'Forbidden', null, msg, msg))
     }
     req.user = usr
     next()
@@ -80,7 +80,7 @@ async function validateRegister(req, res, next) {
     const reg = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})/
     if (!req.body.password.match(reg)) {
         let msg = `Too weak password`
-        return res.status(417).json(new ApiResponse(417, 'ExpectationFaild', msg))
+        return res.status(417).json(new ApiResponse(417, 'ExpectationFaild', null, msg, msg))
     }
 
     const exists = await User.findOne({ email: req.body.email })

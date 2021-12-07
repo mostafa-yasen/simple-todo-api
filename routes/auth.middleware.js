@@ -9,7 +9,6 @@ async function authenticate(req, res, next) {
             let msg = `You are not authorized`
             return res.status(401).json(new ApiResponse(401, 'Unauthorized', null, msg, msg))
         }
-        console.log("token:", token)
         const verified = jwt.verify(token, process.env.TOKEN_SECRET)
         if (!verified) {
             let msg = `You are not authorized`

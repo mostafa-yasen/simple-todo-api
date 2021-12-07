@@ -37,7 +37,7 @@ router.post('/', authenticate, async (req, res) => {
             newItem.done = body.done
         }
         newItem = await newItem.save()
-        res.status(201).json(new ApiResponse(201, null, newItem))
+        res.status(201).json(new ApiResponse(201, null, newItem, 'Item Created'))
 
     } catch(err) {
         let msg = err.message
@@ -58,14 +58,14 @@ router.patch('/:id', authenticate, getTodoItem, async (req, res) => {
     }
     res.todoItem.done = body.done || false
     let updatedItem = await res.todoItem.save()
-    res.json(new ApiResponse(200, null, updatedItem))
+    res.json(new ApiResponse(200, null, updatedItem, "Item updated"))
 })
 
 // Delete One
 router.delete('/:id', authenticate, getTodoItem, async (req, res) => {
     try {
         await res.todoItem.remove()
-        let msg = `Item removed successfully`
+        let msg = `Item removed`
         return res.json(new ApiResponse(200, null, null, msg, msg))
     } catch(err) {
         let msg = err.message
